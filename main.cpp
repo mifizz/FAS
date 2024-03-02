@@ -12,8 +12,25 @@ float degCosine(float degree)
 	return cos(degree * PI / 180);
 }
 
+void ignoreLine()
+{
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
 int main()
 {
+	//Hello
+	std::cout << "\033[33m"
+				 "8888888888        d8888      .d8888b.  \n"
+				 "888              d88888     d88P  Y88b \n" 
+				 "888             d88P888     Y88b.      \n"
+				 "8888888        d88P 888      \"Y888b.   \n"
+				 "888           d88P  888         \"Y88b. \n"
+				 "888          d88P   888           \"888 \n"
+				 "888         d8888888888     Y88b  d88P \n"
+				 "888        d88P     888      \"Y8888P\"  \n\n\033[0m"
+				 "\t  \033[93mFind A \033[31mS\033[91mt\033[32mr\033[92mo\033[33mn\033[34mg\033[94mh\033[35mo\033[95ml\033[31md\033[0m\n\n"<< std::endl;
+
 	////Variables
 	bool B_smaller_than_90 = false;
 	char direction, facingOfST;
@@ -21,25 +38,76 @@ int main()
 	float A_angle, B_angle, C_angle, A_sine, B_sine, C_sine, B_cosine, angleOfThrow1, angleOfThrow2, tempC;
 
 	//Variables initialising (user input)
-	std::cout << "Enter first angle:" << std::endl;
-	std::cin >> angleOfThrow1;
+	while (1) {
+		std::cout << "Enter first angle: ";
+		std::cin >> angleOfThrow1;
+		if (!std::cin) {
+			std::cin.clear();
+			ignoreLine();
+			std::cout << "\033[31m[INPUT ERROR]\033[0m Incorrect value! (It must be a number and be between -2147483648 and 2147483647)\n" << std::endl;
+			continue;
+		}
+		if (angleOfThrow1 <= 180 && angleOfThrow1 >= -180) break;
+		else std::cout << "\033[31m[INPUT ERROR]\033[0m Angle should be between -180 and 180!\n" << std::endl;
+	}
+	
+	while (1) {
+		std::cout << "\nEnter direction (L or R): ";
+		std::cin >> direction;
+		if (direction == 'R' || direction == 'L') direction += 32;
+		if (direction == 'r' || direction == 'l') break;
+		else std::cout << "\033[31m[INPUT ERROR]\033[0m Incorrect direction!" << std::endl;
+	}
+	
+	while (1) {
+		std::cout << "\nEnter distance between throws: ";
+		std::cin >> throw_distance;
+		if (!std::cin) {
+			std::cin.clear();
+			ignoreLine();
+			std::cout << "\033[31m[INPUT ERROR]\033[0m Incorrect value! (It must be a number and be between -2147483648 and 2147483647)" << std::endl;
+			continue;
+		}
+		else break;
+	}
 
-	std::cout << "\nEnter direction (L or R):" << std::endl;
-	std::cin >> direction;
-	if (direction == 'R' || direction == 'L') direction += 32;
-
-	std::cout << "\nEnter distance between throws:" << std::endl;
-	std::cin >> throw_distance;
-
-	std::cout << "\nEnter second angle:" << std::endl;
-	std::cin >> angleOfThrow2;
-
-	std::cout << "\nEnter X coordinate:" << std::endl;
-	std::cin >> player_x;
-
-	std::cout << "\nEnter Z coordinate:" << std::endl;
-	std::cin >> player_z;
-
+	while (1) {
+		std::cout << "\nEnter second angle: ";
+		std::cin >> angleOfThrow2;
+		if (!std::cin) {
+			std::cin.clear();
+			ignoreLine();
+			std::cout << "\033[31m[INPUT ERROR]\033[0m Incorrect value! (It must be a number and be between -2147483648 and 2147483647)" << std::endl;
+			continue;
+		}
+		if (angleOfThrow2 <= 180 && angleOfThrow2 >= -180) break;
+		else std::cout << "\033[31m[INPUT ERROR]\033[0m Angle should be between -180 and 180!" << std::endl;
+	}
+	
+	while (1) {
+		std::cout << "\nEnter X coordinate: ";
+		std::cin >> player_x;
+		if (!std::cin) {
+			std::cin.clear();
+			ignoreLine();
+			std::cout << "\033[31m[INPUT ERROR]\033[0m Incorrect value! (It must be a number and be between -2147483648 and 2147483647)" << std::endl;
+			continue;
+		}
+		else break;
+	}
+	
+	while (1) {
+		std::cout << "\nEnter Z coordinate: ";
+		std::cin >> player_z;
+		if (!std::cin) {
+			std::cin.clear();
+			ignoreLine();
+			std::cout << "\033[31m[INPUT ERROR]\033[0m Incorrect value! (It must be a number and be between -2147483648 and 2147483647)" << std::endl;
+			continue;
+		}
+		else break;
+	}
+	
 	////Calculations
 
 	//Angle A
@@ -58,7 +126,6 @@ int main()
 		else if (angleOfThrow1 >= -180) A_angle = -(angleOfThrow1 + 90);
 	}
 
-
 	//Angle C
 	tempC = angleOfThrow1 + 180 - (angleOfThrow2 + 180);
 	if (tempC < 0) tempC *= -1;
@@ -68,15 +135,9 @@ int main()
 	//Angle B
 	B_angle = 180 - A_angle - C_angle;
 
-	std::cout << "\n\033[93m[DEBUG]\033[0m A angle = " << A_angle << std::endl;
-	std::cout << "\033[93m[DEBUG]\033[0m B angle = " << B_angle << std::endl;
-	std::cout << "\033[93m[DEBUG]\033[0m C angle = " << C_angle << std::endl;
-
 	//Sines of angles A and C
 	A_sine = degSine(A_angle);
 	C_sine = degSine(C_angle);
-
-	//B_cosine = degCosine(B_angle);
 
 	//Distance to stronghold
 	strh_distance = throw_distance * A_sine / C_sine;
